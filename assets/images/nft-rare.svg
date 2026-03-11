@@ -1,0 +1,7 @@
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7e22ce"/><stop offset="100%" stop-color="#111827"/></linearGradient></defs>
+  <rect width="800" height="800" rx="64" fill="url(#g)"/>
+  <circle cx="400" cy="350" r="170" fill="#ddd6fe" fill-opacity="0.25"/>
+  <path d="M220 520L320 290L420 390L520 250L590 520" stroke="#f5f3ff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="130" y="730" fill="#f5f3ff" font-family="Inter, Arial" font-size="64" font-weight="700">RARE</text>
+</svg>
