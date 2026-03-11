@@ -374,45 +374,13 @@
                             );
                         })}
                     </div>
-
-                    <div className="glass-panel rounded-2xl border border-white/10 p-8">
-                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                            <span className="w-2 h-8 bg-neon rounded-full box-glow inline-block"></span>
-                            {t.howTitle}
-                        </h2>
-                        <div className="grid md:grid-cols-3 gap-5">
-                            {howSteps.map((step, idx) => {
-                                const Icon = step.icon;
-                                return (
-                                    <div key={idx} className="rounded-xl border border-white/10 bg-black/30 p-5 hover:border-neon/40 transition-colors">
-                                        <div className="w-10 h-10 rounded-lg bg-neon/10 text-neon flex items-center justify-center mb-4">
-                                            <Icon size={18} />
-                                        </div>
-                                        <h3 className="font-bold text-lg mb-2">{step.title}</h3>
-                                        <p className="text-gray-400 text-sm leading-relaxed">{step.text}</p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-5">
-                        {trustItems.map((item, idx) => {
-                            const Icon = item.icon;
-                            return (
-                                <div key={idx} className="glass-panel rounded-2xl border border-white/10 p-6 hover:border-neon/40 transition-colors">
-                                    <div className="w-10 h-10 rounded-lg bg-neon/10 text-neon flex items-center justify-center mb-4">
-                                        <Icon size={18} />
-                                    </div>
-                                    <h3 className="font-bold mb-2">{item.title}</h3>
-                                    <p className="text-sm text-gray-400">{item.text}</p>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
-            );
-        };
+                </div>
+                <div className="flex-1 relative w-full max-w-md mx-auto md:max-w-full">
+                    <div className="absolute inset-0 bg-neon/20 blur-[100px] rounded-full"></div>
+                    <img src="./assets/images/hero.svg" alt="Hero" className="relative z-10 w-full rounded-2xl border border-white/10 glass-panel transform hover:-translate-y-2 transition-transform duration-500" />
+                </div>
+            </motion.div>
+        );
 
         const Dao = ({ t, wallet, gazaBalance }) => (
             <motion.div
