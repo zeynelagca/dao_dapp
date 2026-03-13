@@ -4,6 +4,8 @@ import path from 'path';
 const htmlTemplateUrl = './index.html';
 const distDir = './dist';
 const outputUrl = path.join(distDir, 'index.html');
+const assetsSourceDir = './assets';
+const assetsOutputDir = path.join(distDir, 'assets');
 
 // Create dist directory if it doesn't exist
 if (!fs.existsSync(distDir)) {
@@ -22,5 +24,10 @@ htmlContent = htmlContent.replace(/__NFT_ADDRESS__/g, NFT_ADDRESS);
 
 // Output to /dist for Static Hosting routing
 fs.writeFileSync(outputUrl, htmlContent);
+
+// Copy local assets into dist for static hosting
+if (fs.existsSync(assetsSourceDir)) {
+    fs.cpSync(assetsSourceDir, assetsOutputDir, { recursive: true });
+}
 
 console.log('Build complete. Generated dist/index.html mapping custom Environment Variables successfully.');
