@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_spa_meeting_minutes" model="ir.actions.report">
+        <field name="name">Toplantı Tutanağı</field>
+        <field name="model">spa.meeting</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_parent_association.report_spa_meeting_minutes</field>
+        <field name="report_file">school_parent_association.report_spa_meeting_minutes</field>
+    </record>
+    <record id="action_report_spa_decision" model="ir.actions.report">
+        <field name="name">Karar Formu</field>
+        <field name="model">spa.decision</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_parent_association.report_spa_decision</field>
+        <field name="report_file">school_parent_association.report_spa_decision</field>
+    </record>
+    <record id="action_report_spa_donation_receipt" model="ir.actions.report">
+        <field name="name">Bağış Kayıt Belgesi</field>
+        <field name="model">spa.donation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_parent_association.report_spa_donation_receipt</field>
+        <field name="report_file">school_parent_association.report_spa_donation_receipt</field>
+    </record>
+    <record id="action_report_spa_expense_summary" model="ir.actions.report">
+        <field name="name">Gider Özeti</field>
+        <field name="model">spa.expense.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_parent_association.report_spa_expense_summary</field>
+        <field name="report_file">school_parent_association.report_spa_expense_summary</field>
+    </record>
+    <record id="action_report_spa_union_term_summary" model="ir.actions.report">
+        <field name="name">Dönem Özeti</field>
+        <field name="model">spa.union.term</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_parent_association.report_spa_union_term_summary</field>
+        <field name="report_file">school_parent_association.report_spa_union_term_summary</field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="spa_menu_root" name="Okul Aile Birliği" sequence="10" groups="school_parent_association.group_spa_admin,school_parent_association.group_spa_principal,school_parent_association.group_spa_president,school_parent_association.group_spa_treasurer,school_parent_association.group_spa_auditor,school_parent_association.group_spa_representative,school_parent_association.group_spa_teacher_requester,school_parent_association.group_spa_readonly"/>
+
+    <menuitem id="spa_menu_config" name="Yapılandırma" parent="spa_menu_root" sequence="10"/>
+    <menuitem id="spa_menu_schools" name="Okullar" parent="spa_menu_config" action="spa_school_action" sequence="11"/>
+    <menuitem id="spa_menu_academic_year" name="Akademik Yıllar" parent="spa_menu_config" action="spa_academic_year_action" sequence="12"/>
+    <menuitem id="spa_menu_terms" name="Birlik Dönemleri" parent="spa_menu_config" action="spa_union_term_action" sequence="13"/>
+    <menuitem id="spa_menu_roles" name="Üye Rolleri" parent="spa_menu_config" action="spa_member_role_action" sequence="14"/>
+
+    <menuitem id="spa_menu_boards" name="Kurullar" parent="spa_menu_root" sequence="20" action="spa_board_member_action"/>
+    <menuitem id="spa_menu_meetings" name="Toplantılar" parent="spa_menu_root" sequence="30" action="spa_meeting_action"/>
+    <menuitem id="spa_menu_decisions" name="Kararlar" parent="spa_menu_root" sequence="40" action="spa_decision_action"/>
+
+    <menuitem id="spa_menu_finance" name="Mali İşlemler" parent="spa_menu_root" sequence="50"/>
+    <menuitem id="spa_menu_donations" name="Bağışlar" parent="spa_menu_finance" action="spa_donation_action" sequence="51"/>
+    <menuitem id="spa_menu_expenses" name="Gider Talepleri" parent="spa_menu_finance" action="spa_expense_request_action" sequence="52"/>
+    <menuitem id="spa_menu_tefbis" name="TEFBİS Dışa Aktarım" parent="spa_menu_finance" action="spa_tefbis_export_action" sequence="53"/>
+
+    <menuitem id="spa_menu_requests" name="Talepler" parent="spa_menu_root" sequence="60" action="spa_need_request_action"/>
+    <menuitem id="spa_menu_events" name="Etkinlikler" parent="spa_menu_root" sequence="70" action="spa_event_action"/>
+    <menuitem id="spa_menu_announcements" name="Duyurular" parent="spa_menu_root" sequence="80" action="spa_announcement_action"/>
+    <menuitem id="spa_menu_audit" name="Denetim" parent="spa_menu_root" sequence="90" action="spa_audit_note_action"/>
+
+    <menuitem id="spa_menu_reports" name="Raporlar" parent="spa_menu_root" sequence="100"/>
+</odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="spa_school_view_tree" model="ir.ui.view">
+        <field name="name">spa.school.tree</field>
+        <field name="model">spa.school</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="school_type"/>
+                <field name="principal_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    <record id="spa_school_view_form" model="ir.ui.view">
+        <field name="name">spa.school.form</field>
+        <field name="model">spa.school</field>
+        <field name="arch" type="xml">
+            <form string="Okul">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="school_type"/>
+                        <field name="principal_id"/>
+                        <field name="partner_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="spa_school_action" model="ir.actions.act_window">
+        <field name="name">Okullar</field>
+        <field name="res_model">spa.school</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="spa_academic_year_view_tree" model="ir.ui.view">
+        <field name="name">spa.academic.year.tree</field>
+        <field name="model">spa.academic.year</field>
+        <field name="arch" type="xml"><tree><field name="name"/><field name="date_start"/><field name="date_end"/><field name="active"/></tree></field>
+    </record>
+    <record id="spa_academic_year_view_form" model="ir.ui.view">
+        <field name="name">spa.academic.year.form</field>
+        <field name="model">spa.academic.year</field>
+        <field name="arch" type="xml">
+            <form string="Akademik Yıl"><sheet><group><field name="name"/><field name="date_start"/><field name="date_end"/><field name="active"/></group></sheet></form>
+        </field>
+    </record>
+    <record id="spa_academic_year_action" model="ir.actions.act_window">
+        <field name="name">Akademik Yıllar</field>
+        <field name="res_model">spa.academic.year</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="spa_union_term_view_tree" model="ir.ui.view">
+        <field name="name">spa.union.term.tree</field>
+        <field name="model">spa.union.term</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="school_id"/>
+                <field name="academic_year_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="spa_union_term_view_form" model="ir.ui.view">
+        <field name="name">spa.union.term.form</field>
+        <field name="model">spa.union.term</field>
+        <field name="arch" type="xml">
+            <form string="Birlik Dönemi">
+                <header>
+                    <button name="action_set_draft" type="object" string="Taslak" invisible="state == 'draft'"/>
+                    <button name="action_activate" type="object" string="Aktifleştir" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_close" type="object" string="Kapat" invisible="state != 'active'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_meetings" class="oe_stat_button" icon="fa-users"><field string="Toplantılar" name="meeting_count" widget="statinfo"/></button>
+                        <button type="object" name="action_view_donations" class="oe_stat_button" icon="fa-heart"><field string="Bağışlar" name="donation_count" widget="statinfo"/></button>
+                        <button type="object" name="action_view_expenses" class="oe_stat_button" icon="fa-money"><field string="Giderler" name="expense_count" widget="statinfo"/></button>
+                        <button type="object" name="action_view_events" class="oe_stat_button" icon="fa-calendar"><field string="Etkinlikler" name="event_count" widget="statinfo"/></button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="school_id"/>
+                            <field name="academic_year_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="chairman_id"/>
+                            <field name="treasurer_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notlar"><field name="notes"/></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="spa_union_term_action" model="ir.actions.act_window">
+        <field name="name">Birlik Dönemleri</field>
+        <field name="res_model">spa.union.term</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
