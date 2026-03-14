@@ -9,7 +9,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "test": "npx hardhat test"
+    "test": "npx hardhat test",
+    "deploy:testnet": "npx hardhat run scripts/deploy.cjs --network amoy",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.cjs --network polygon",
+    "compile": "npx hardhat compile"
   },
   "keywords": [],
   "author": "",
