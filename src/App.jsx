@@ -290,66 +290,336 @@ const Home = ({ t, setSection }) => {
     );
 };
 
-const Dao = ({ t, wallet, gazaBalance }) => (
-    <div className="space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass-panel p-8 rounded-2xl relative overflow-hidden group border border-neon/20 hover:border-neon/50 transition-colors">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-neon/10 blur-[50px] group-hover:bg-neon/20 transition-colors"></div>
-                <h3 className="text-gray-400 text-lg mb-2 flex items-center gap-2"><Landmark size={20} className="text-neon" /> {t.treasury}</h3>
-                <div className="text-5xl font-bold text-white tracking-tight">$142,500 <span className="text-neon text-2xl">USDC</span></div>
-                <div className="mt-4 text-sm text-neon flex items-center gap-1"><Activity size={14} /> +12.5% this week</div>
+const Dao = ({ t, wallet, gazaBalance }) => {
+    const [filter, setFilter] = useState('all');
+    const [showCreate, setShowCreate] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [newDesc, setNewDesc] = useState('');
+    const [newAmount, setNewAmount] = useState('');
+    const [newCategory, setNewCategory] = useState('aid');
+    const [expandedId, setExpandedId] = useState(null);
+    const [voted, setVoted] = useState({});
+
+    const CATEGORIES = {
+        aid: { label: "🏥 Humanitarian Aid", color: "text-green-400" },
+        infra: { label: "🏗️ Infrastructure", color: "text-blue-400" },
+        edu: { label: "📚 Education", color: "text-purple-400" },
+        energy: { label: "⚡ Energy", color: "text-amber-400" },
+        health: { label: "💊 Healthcare", color: "text-pink-400" }
+    };
+
+    const STATUS = {
+        active: { label: "Active", bg: "bg-neon/20", text: "text-neon" },
+        passed: { label: "Passed", bg: "bg-blue-500/20", text: "text-blue-400" },
+        rejected: { label: "Rejected", bg: "bg-red-500/20", text: "text-red-400" },
+        executed: { label: "Executed ✓", bg: "bg-emerald-500/20", text: "text-emerald-400" }
+    };
+
+    const [proposals, setProposals] = useState([
+        {
+            id: 1, title: "#GIP-12: Solar Panels for Hospitals",
+            desc: "Install solar panel systems in 3 major hospitals to ensure uninterrupted power supply during emergencies. Budget includes panels, batteries, and installation labor.",
+            category: "energy", status: "active", amount: 45000,
+            yesVotes: 1008000, noVotes: 192000, totalVoters: 847,
+            endsIn: "2 days", author: "0x7a3b...f91c", createdAt: "Mar 10, 2026"
+        },
+        {
+            id: 2, title: "#GIP-11: Clean Water Distribution Network",
+            desc: "Build a decentralized clean water pipeline serving 12 neighborhoods. Includes filtration stations and maintenance fund for 2 years.",
+            category: "infra", status: "active", amount: 62000,
+            yesVotes: 780000, noVotes: 420000, totalVoters: 623,
+            endsIn: "5 days", author: "0x9c1d...e42a", createdAt: "Mar 8, 2026"
+        },
+        {
+            id: 3, title: "#GIP-10: Emergency Medical Supplies",
+            desc: "Procure and distribute critical medical supplies including antibiotics, surgical kits, and trauma care equipment to 5 field hospitals.",
+            category: "health", status: "passed", amount: 28000,
+            yesVotes: 1450000, noVotes: 150000, totalVoters: 1102,
+            endsIn: "Ended", author: "0x3f8e...b72d", createdAt: "Mar 5, 2026"
+        },
+        {
+            id: 4, title: "#GIP-09: School Rebuilding Program",
+            desc: "Rebuild 2 destroyed primary schools with modern earthquake-resistant design. Includes desks, digital learning equipment, and playground.",
+            category: "edu", status: "executed", amount: 85000,
+            yesVotes: 1820000, noVotes: 80000, totalVoters: 1456,
+            endsIn: "Completed", author: "0x5b2a...d19f", createdAt: "Feb 28, 2026"
+        },
+        {
+            id: 5, title: "#GIP-08: Food Aid Logistics Hub",
+            desc: "Establish a central logistics hub for food distribution with cold storage facilities and delivery vehicle fleet.",
+            category: "aid", status: "rejected", amount: 120000,
+            yesVotes: 340000, noVotes: 860000, totalVoters: 789,
+            endsIn: "Ended", author: "0x8d4c...a63e", createdAt: "Feb 25, 2026"
+        }
+    ]);
+
+    const filteredProposals = filter === 'all' ? proposals : proposals.filter(p => p.status === filter);
+    const votingPower = wallet ? Number(parseFloat(gazaBalance)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "0";
+    const canCreateProposal = wallet && parseFloat(gazaBalance) >= 10000;
+
+    const handleVote = (id, isYes) => {
+        if (!wallet) return alert("Please connect your wallet first.");
+        if (voted[id]) return;
+        setVoted(prev => ({ ...prev, [id]: isYes ? 'yes' : 'no' }));
+        setProposals(prev => prev.map(p =>
+            p.id === id ? {
+                ...p,
+                yesVotes: isYes ? p.yesVotes + parseFloat(gazaBalance) : p.yesVotes,
+                noVotes: !isYes ? p.noVotes + parseFloat(gazaBalance) : p.noVotes,
+                totalVoters: p.totalVoters + 1
+            } : p
+        ));
+    };
+
+    const handleCreateProposal = () => {
+        if (!newTitle || !newDesc || !newAmount) return;
+        const newProp = {
+            id: proposals.length + 1,
+            title: `#GIP-${proposals.length + 8}: ${newTitle}`,
+            desc: newDesc,
+            category: newCategory,
+            status: "active",
+            amount: parseInt(newAmount),
+            yesVotes: 0, noVotes: 0, totalVoters: 0,
+            endsIn: "7 days",
+            author: wallet ? wallet.substring(0, 6) + '...' + wallet.substring(wallet.length - 4) : "0x...",
+            createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        };
+        setProposals(prev => [newProp, ...prev]);
+        setNewTitle(''); setNewDesc(''); setNewAmount('');
+        setShowCreate(false);
+    };
+
+    return (
+        <div className="space-y-8">
+            {/* Stats Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="glass-panel p-8 rounded-2xl relative overflow-hidden group border border-neon/20 hover:border-neon/50 transition-colors">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-neon/10 blur-[50px] group-hover:bg-neon/20 transition-colors" />
+                    <h3 className="text-gray-400 text-lg mb-2 flex items-center gap-2"><Landmark size={20} className="text-neon" /> {t.treasury}</h3>
+                    <div className="text-4xl font-bold text-white tracking-tight">$142,500 <span className="text-neon text-xl">USDC</span></div>
+                    <div className="mt-3 text-sm text-neon flex items-center gap-1"><Activity size={14} /> +12.5% this week</div>
+                </div>
+                <div className="glass-panel p-8 rounded-2xl relative overflow-hidden border border-white/10 hover:border-white/20 transition-colors group">
+                    <h3 className="text-gray-400 text-lg mb-2 flex items-center gap-2"><Shield size={20} className="text-neon" /> {t.votingPower}</h3>
+                    <div className="text-4xl font-bold text-white tracking-tight group-hover:text-glow transition-all">
+                        {votingPower} <span className="text-neon text-xl">vGAZAIN</span>
+                    </div>
+                    <div className="mt-3 text-sm text-gray-400">Min 10,000 to create proposals</div>
+                </div>
+                <div className="glass-panel p-8 rounded-2xl relative overflow-hidden border border-white/10 hover:border-white/20 transition-colors">
+                    <h3 className="text-gray-400 text-lg mb-2 flex items-center gap-2"><CheckCircle2 size={20} className="text-neon" /> Governance</h3>
+                    <div className="text-4xl font-bold text-white tracking-tight">{proposals.length}</div>
+                    <div className="mt-3 text-sm text-gray-400">{proposals.filter(p => p.status === 'active').length} active · {proposals.filter(p => p.status === 'executed').length} executed</div>
+                </div>
             </div>
 
-            <div className="glass-panel p-8 rounded-2xl relative overflow-hidden border border-white/10 hover:border-white/20 transition-colors group">
-                <h3 className="text-gray-400 text-lg mb-2 flex items-center gap-2"><Shield size={20} className="text-neon" /> {t.votingPower}</h3>
-                <div className="text-5xl font-bold text-white tracking-tight group-hover:text-glow transition-all">
-                    {wallet ? Number(gazaBalance).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "0"} <span className="text-neon text-2xl">vGAZAIN</span>
+            {/* Controls: Filter + Create */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex flex-wrap gap-2">
+                    {['all', 'active', 'passed', 'rejected', 'executed'].map(f => (
+                        <button key={f} onClick={() => setFilter(f)}
+                            className={`px-4 py-2 rounded-full text-sm font-bold capitalize transition-all ${filter === f
+                                ? 'bg-neon/20 text-neon border border-neon/50'
+                                : 'glass-panel border border-white/10 text-gray-400 hover:text-white'
+                            }`}
+                        >{f === 'all' ? `All (${proposals.length})` : `${f} (${proposals.filter(p => p.status === f).length})`}</button>
+                    ))}
                 </div>
-                <div className="mt-4 text-sm text-gray-400">
-                    ($GAZAIN Balance × NFT Multiplier)
+                <button
+                    onClick={() => canCreateProposal ? setShowCreate(!showCreate) : alert(wallet ? "Need 10,000+ $GAZAIN to create proposals" : "Connect wallet first")}
+                    className="flex items-center gap-2 bg-neon text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-[0_0_20px_rgba(34,197,94,0.3)]"
+                >
+                    <span className="text-xl">+</span> Create Proposal
+                </button>
+            </div>
+
+            {/* Create Proposal Form */}
+            {showCreate && (
+                <div className="glass-panel p-8 rounded-2xl border border-neon/30 space-y-6 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                        <span className="w-2 h-6 bg-neon rounded-full box-glow inline-block" /> New Proposal
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-gray-400 text-sm uppercase tracking-wider">Title</label>
+                            <input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="e.g., School Rebuilding Phase 2"
+                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-neon/50 focus:outline-none transition-colors" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-gray-400 text-sm uppercase tracking-wider">Amount (USDC)</label>
+                                <input type="number" value={newAmount} onChange={e => setNewAmount(e.target.value)} placeholder="50000"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-neon/50 focus:outline-none transition-colors" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-gray-400 text-sm uppercase tracking-wider">Category</label>
+                                <select value={newCategory} onChange={e => setNewCategory(e.target.value)}
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-neon/50 focus:outline-none transition-colors">
+                                    {Object.entries(CATEGORIES).map(([key, val]) => (
+                                        <option key={key} value={key}>{val.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-gray-400 text-sm uppercase tracking-wider">Description</label>
+                        <textarea value={newDesc} onChange={e => setNewDesc(e.target.value)} rows={3} placeholder="Describe the proposal, its goals, and how the funds will be used..."
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-neon/50 focus:outline-none transition-colors resize-none" />
+                    </div>
+                    <div className="flex gap-4">
+                        <button onClick={handleCreateProposal}
+                            className="flex-1 py-3 bg-neon text-black rounded-xl font-bold hover:scale-[1.02] transition-transform shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                            Submit Proposal
+                        </button>
+                        <button onClick={() => setShowCreate(false)}
+                            className="px-6 py-3 border border-white/10 text-gray-400 rounded-xl font-bold hover:bg-white/5 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-500">Voting period: 7 days · Quorum: 500K vGAZAIN · Pass threshold: &gt;50% Yes votes</p>
+                </div>
+            )}
+
+            {/* Proposals List */}
+            <div className="space-y-4">
+                {filteredProposals.map(p => {
+                    const totalVotes = p.yesVotes + p.noVotes;
+                    const yesPct = totalVotes > 0 ? ((p.yesVotes / totalVotes) * 100).toFixed(0) : 0;
+                    const noPct = totalVotes > 0 ? ((p.noVotes / totalVotes) * 100).toFixed(0) : 0;
+                    const isExpanded = expandedId === p.id;
+                    const st = STATUS[p.status];
+                    const cat = CATEGORIES[p.category];
+                    const hasVoted = voted[p.id];
+
+                    return (
+                        <div key={p.id} className={`glass-panel rounded-2xl border transition-all ${isExpanded ? 'border-neon/30 shadow-[0_0_20px_rgba(34,197,94,0.1)]' : 'border-white/10 hover:border-white/20'}`}>
+                            {/* Header */}
+                            <div className="p-6 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : p.id)}>
+                                <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                                    <div className="flex-1">
+                                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                                            <span className={`px-3 py-1 ${st.bg} ${st.text} rounded-full text-xs font-bold uppercase tracking-wider`}>{st.label}</span>
+                                            <span className={`text-xs ${cat.color}`}>{cat.label}</span>
+                                            <span className="text-xs text-gray-500">${p.amount.toLocaleString()} USDC</span>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-white">{p.title}</h3>
+                                    </div>
+                                    <div className="text-right shrink-0">
+                                        <span className="text-gray-400 text-sm">{p.endsIn}</span>
+                                        <div className="text-xs text-gray-500 mt-1">{p.totalVoters} voters</div>
+                                    </div>
+                                </div>
+
+                                {/* Mini Progress */}
+                                <div className="mt-4">
+                                    <div className="flex justify-between text-xs mb-1">
+                                        <span className="text-neon font-bold">{yesPct}% Yes</span>
+                                        <span className="text-red-400 font-bold">{noPct}% No</span>
+                                    </div>
+                                    <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden flex">
+                                        <div className="h-full bg-neon rounded-full transition-all" style={{ width: `${yesPct}%` }} />
+                                        <div className="h-full bg-red-500 rounded-full transition-all" style={{ width: `${noPct}%` }} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Expanded Detail */}
+                            {isExpanded && (
+                                <div className="px-6 pb-6 space-y-6 border-t border-white/5 pt-5">
+                                    <p className="text-gray-400 leading-relaxed">{p.desc}</p>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                                        <div className="bg-black/30 rounded-lg p-3">
+                                            <div className="text-sm font-bold text-neon">{(p.yesVotes / 1000).toFixed(0)}K</div>
+                                            <div className="text-xs text-gray-500">Yes Votes</div>
+                                        </div>
+                                        <div className="bg-black/30 rounded-lg p-3">
+                                            <div className="text-sm font-bold text-red-400">{(p.noVotes / 1000).toFixed(0)}K</div>
+                                            <div className="text-xs text-gray-500">No Votes</div>
+                                        </div>
+                                        <div className="bg-black/30 rounded-lg p-3">
+                                            <div className="text-sm font-bold text-white">{p.totalVoters}</div>
+                                            <div className="text-xs text-gray-500">Voters</div>
+                                        </div>
+                                        <div className="bg-black/30 rounded-lg p-3">
+                                            <div className="text-sm font-bold text-white">{p.author}</div>
+                                            <div className="text-xs text-gray-500">Author</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Vote Buttons */}
+                                    {p.status === 'active' && (
+                                        <div className="space-y-3">
+                                            {hasVoted ? (
+                                                <div className={`text-center py-3 rounded-xl font-bold ${hasVoted === 'yes' ? 'bg-neon/10 text-neon border border-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                                                    You voted {hasVoted === 'yes' ? '✓ For' : '✗ Against'} with {votingPower} vGAZAIN
+                                                </div>
+                                            ) : (
+                                                <div className="flex gap-4">
+                                                    <button onClick={(e) => { e.stopPropagation(); handleVote(p.id, true); }}
+                                                        className="flex-1 py-3 bg-neon/10 border border-neon/50 text-neon hover:bg-neon hover:text-black rounded-xl font-bold transition-all shadow-lg hover:shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                                                        {t.voteYes}
+                                                    </button>
+                                                    <button onClick={(e) => { e.stopPropagation(); handleVote(p.id, false); }}
+                                                        className="flex-1 py-3 border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-all hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                                                        {t.voteNo}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Finalization Info */}
+                                    {p.status === 'passed' && (
+                                        <div className="glass-panel p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 flex items-start gap-3">
+                                            <Info size={18} className="text-blue-400 shrink-0 mt-0.5" />
+                                            <div className="text-sm"><span className="text-blue-400 font-bold">Awaiting Execution:</span> <span className="text-blue-300/80">This proposal passed with {yesPct}% approval. The treasury multisig holders will execute the fund transfer of ${p.amount.toLocaleString()} USDC within 48 hours.</span></div>
+                                        </div>
+                                    )}
+                                    {p.status === 'executed' && (
+                                        <div className="glass-panel p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 flex items-start gap-3">
+                                            <CheckCircle2 size={18} className="text-emerald-400 shrink-0 mt-0.5" />
+                                            <div className="text-sm"><span className="text-emerald-400 font-bold">Executed:</span> <span className="text-emerald-300/80">${p.amount.toLocaleString()} USDC has been transferred from the treasury. Funds are being deployed for: {p.title.split(': ')[1]}.</span></div>
+                                        </div>
+                                    )}
+                                    {p.status === 'rejected' && (
+                                        <div className="glass-panel p-4 rounded-xl border border-red-500/20 bg-red-500/5 flex items-start gap-3">
+                                            <Info size={18} className="text-red-400 shrink-0 mt-0.5" />
+                                            <div className="text-sm"><span className="text-red-400 font-bold">Rejected:</span> <span className="text-red-300/80">This proposal did not reach the required &gt;50% approval threshold. The author may revise and resubmit.</span></div>
+                                        </div>
+                                    )}
+
+                                    <div className="text-xs text-gray-600">Created: {p.createdAt} · Voting period: 7 days · Quorum: 500K vGAZAIN</div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Governance Rules */}
+            <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2"><BookOpen size={18} className="text-neon" /> Governance Rules</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="bg-black/30 rounded-xl p-4">
+                        <div className="text-neon font-bold mb-1">Create</div>
+                        <p className="text-gray-400">Hold 10,000+ $GAZAIN to submit proposals. Voting runs for 7 days.</p>
+                    </div>
+                    <div className="bg-black/30 rounded-xl p-4">
+                        <div className="text-neon font-bold mb-1">Vote</div>
+                        <p className="text-gray-400">Your $GAZAIN = your vote weight. Quorum: 500K total votes. Pass: &gt;50% Yes.</p>
+                    </div>
+                    <div className="bg-black/30 rounded-xl p-4">
+                        <div className="text-neon font-bold mb-1">Execute</div>
+                        <p className="text-gray-400">Passed proposals are executed by the treasury multisig within 48 hours. On-chain verifiable.</p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div className="glass-panel p-8 rounded-2xl border border-white/10">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <span className="w-2 h-8 bg-neon rounded-full box-glow inline-block"></span>
-                {t.proposals}
-            </h2>
-
-            <div className="border border-white/10 rounded-xl p-6 bg-black/40 hover:bg-black/60 transition-colors outline outline-1 outline-transparent hover:outline-neon/30">
-                <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
-                    <div>
-                        <span className="px-3 py-1 bg-neon/20 text-neon rounded-full text-xs font-bold uppercase tracking-wider mb-3 inline-block box-glow">Active</span>
-                        <h3 className="text-xl font-bold text-white">{t.prop1}</h3>
-                    </div>
-                    <span className="text-gray-400 text-sm whitespace-nowrap">Ends in 2 days</span>
-                </div>
-
-                <div className="space-y-4 mb-8">
-                    <div>
-                        <div className="flex justify-between text-sm mb-2">
-                            <span className="text-neon font-bold flex items-center gap-1"><CheckCircle2 size={14} /> 84% Yes</span>
-                            <span className="text-gray-400">1.2M Votes</span>
-                        </div>
-                        <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-neon w-[84%] progress-bar-glow rounded-full"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex gap-4">
-                    <button className="flex-1 py-3 bg-neon/10 border border-neon/50 text-neon hover:bg-neon hover:text-black rounded-lg font-bold transition-all shadow-lg hover:shadow-[0_0_15px_rgba(34,197,94,0.4)]">
-                        {t.voteYes}
-                    </button>
-                    <button className="flex-1 py-3 border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white rounded-lg font-bold transition-all hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]">
-                        {t.voteNo}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-);
+    );
+};
 
 const Nft = ({ t, isEligible, mintNFT, gazaBalance }) => {
     const [timeLeft, setTimeLeft] = useState(24 * 60 * 60);
