@@ -1,0 +1,36 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_spa_school_admin,spa.school admin,model_spa_school,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_school_user,spa.school user,model_spa_school,school_parent_association.group_spa_principal,1,1,1,0
+access_spa_school_readonly,spa.school readonly,model_spa_school,school_parent_association.group_spa_readonly,1,0,0,0
+access_spa_academic_year_admin,spa.academic.year admin,model_spa_academic_year,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_academic_year_user,spa.academic.year user,model_spa_academic_year,school_parent_association.group_spa_principal,1,1,1,0
+access_spa_union_term_admin,spa.union.term admin,model_spa_union_term,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_union_term_user,spa.union.term user,model_spa_union_term,school_parent_association.group_spa_principal,1,1,1,0
+access_spa_member_role_admin,spa.member.role admin,model_spa_member_role,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_member_role_user,spa.member.role user,model_spa_member_role,school_parent_association.group_spa_principal,1,0,0,0
+access_spa_board_member_admin,spa.board.member admin,model_spa_board_member,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_board_member_user,spa.board.member user,model_spa_board_member,school_parent_association.group_spa_president,1,1,1,0
+access_spa_meeting_admin,spa.meeting admin,model_spa_meeting,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_meeting_user,spa.meeting user,model_spa_meeting,school_parent_association.group_spa_president,1,1,1,0
+access_spa_meeting_agenda_admin,spa.meeting.agenda admin,model_spa_meeting_agenda,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_meeting_agenda_user,spa.meeting.agenda user,model_spa_meeting_agenda,school_parent_association.group_spa_president,1,1,1,0
+access_spa_decision_admin,spa.decision admin,model_spa_decision,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_decision_user,spa.decision user,model_spa_decision,school_parent_association.group_spa_president,1,1,1,0
+access_spa_donation_admin,spa.donation admin,model_spa_donation,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_donation_user,spa.donation user,model_spa_donation,school_parent_association.group_spa_treasurer,1,1,1,0
+access_spa_expense_request_admin,spa.expense.request admin,model_spa_expense_request,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_expense_request_user,spa.expense.request user,model_spa_expense_request,school_parent_association.group_spa_treasurer,1,1,1,0
+access_spa_need_request_admin,spa.need.request admin,model_spa_need_request,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_need_request_user,spa.need.request user,model_spa_need_request,school_parent_association.group_spa_teacher_requester,1,1,1,0
+access_spa_event_admin,spa.event admin,model_spa_event,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_event_user,spa.event user,model_spa_event,school_parent_association.group_spa_representative,1,1,1,0
+access_spa_announcement_admin,spa.announcement admin,model_spa_announcement,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_announcement_user,spa.announcement user,model_spa_announcement,school_parent_association.group_spa_principal,1,1,1,0
+access_spa_audit_note_admin,spa.audit.note admin,model_spa_audit_note,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_audit_note_user,spa.audit.note user,model_spa_audit_note,school_parent_association.group_spa_auditor,1,1,1,0
+access_spa_tefbis_export_admin,spa.tefbis.export admin,model_spa_tefbis_export,school_parent_association.group_spa_admin,1,1,1,1
+access_spa_tefbis_export_user,spa.tefbis.export user,model_spa_tefbis_export,school_parent_association.group_spa_treasurer,1,1,1,0
+access_spa_readonly_meeting,spa readonly meeting,model_spa_meeting,school_parent_association.group_spa_readonly,1,0,0,0
+access_spa_readonly_decision,spa readonly decision,model_spa_decision,school_parent_association.group_spa_readonly,1,0,0,0
+access_spa_readonly_donation,spa readonly donation,model_spa_donation,school_parent_association.group_spa_readonly,1,0,0,0
+access_spa_readonly_expense,spa readonly expense,model_spa_expense_request,school_parent_association.group_spa_readonly,1,0,0,0

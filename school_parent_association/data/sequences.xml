@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_spa_meeting" model="ir.sequence">
+        <field name="name">SPA Toplantı</field>
+        <field name="code">spa.meeting</field>
+        <field name="prefix">TOP/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_spa_decision" model="ir.sequence">
+        <field name="name">SPA Karar</field>
+        <field name="code">spa.decision</field>
+        <field name="prefix">KAR/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_spa_donation" model="ir.sequence">
+        <field name="name">SPA Bağış</field>
+        <field name="code">spa.donation</field>
+        <field name="prefix">BAG/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_spa_expense_request" model="ir.sequence">
+        <field name="name">SPA Gider Talebi</field>
+        <field name="code">spa.expense.request</field>
+        <field name="prefix">GID/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>
