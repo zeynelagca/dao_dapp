@@ -76,13 +76,7 @@ const TRANSLATIONS = {
 };
 
 const Home = ({ t, setSection }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-center justify-between gap-12 mt-10"
-    >
+    <div className="flex flex-col md:flex-row items-center justify-between gap-12 mt-10">
         <div className="flex-1 space-y-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neon/30 bg-neon/5 text-neon text-sm font-medium">
                 <Zap size={14} />
@@ -106,19 +100,13 @@ const Home = ({ t, setSection }) => (
         </div>
         <div className="flex-1 relative w-full max-w-md mx-auto md:max-w-full">
             <div className="absolute inset-0 bg-neon/20 blur-[100px] rounded-full"></div>
-            <img src="http://googleusercontent.com/image_generation_content/0" alt="Hero" className="relative z-10 w-full rounded-2xl border border-white/10 glass-panel transform hover:-translate-y-2 transition-transform duration-500" />
+            <img src="/assets/hero.png" alt="Hero" className="relative z-10 w-full rounded-2xl border border-white/10 glass-panel transform hover:-translate-y-2 transition-transform duration-500" />
         </div>
-    </motion.div>
+    </div>
 );
 
 const Dao = ({ t, wallet, gazaBalance }) => (
-    <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 1.05 }}
-        transition={{ duration: 0.5 }}
-        className="space-y-10"
-    >
+    <div className="space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-panel p-8 rounded-2xl relative overflow-hidden group border border-neon/20 hover:border-neon/50 transition-colors">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-neon/10 blur-[50px] group-hover:bg-neon/20 transition-colors"></div>
@@ -175,7 +163,7 @@ const Dao = ({ t, wallet, gazaBalance }) => (
                 </div>
             </div>
         </div>
-    </motion.div>
+    </div>
 );
 
 const Nft = ({ t, isEligible, mintNFT }) => {
@@ -196,18 +184,13 @@ const Nft = ({ t, isEligible, mintNFT }) => {
     };
 
     const nfts = [
-        { name: t.tier1, rarity: t.common, img: "http://googleusercontent.com/image_generation_content/4", color: "from-blue-500/20" },
-        { name: t.tier2, rarity: t.rare, img: "http://googleusercontent.com/image_generation_content/5", color: "from-purple-500/20" },
-        { name: t.tier3, rarity: t.legendary, img: "http://googleusercontent.com/image_generation_content/6", color: "from-amber-500/20" }
+        { name: t.tier1, rarity: t.common, img: "/assets/tier1.png", color: "from-blue-500/20" },
+        { name: t.tier2, rarity: t.rare, img: "/assets/tier2.png", color: "from-purple-500/20" },
+        { name: t.tier3, rarity: t.legendary, img: "/assets/tier3.png", color: "from-amber-500/20" }
     ];
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-12"
-        >
+        <div className="space-y-12">
             <div className="text-center space-y-4">
                 <div className="inline-block px-6 py-2 glass-panel rounded-full border border-neon/30 text-neon box-glow">
                     <span className="uppercase tracking-widest text-sm font-bold">{t.nftMint}</span>
@@ -261,7 +244,7 @@ const Nft = ({ t, isEligible, mintNFT }) => {
                     ))}
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 };
 
@@ -343,7 +326,7 @@ const App = () => {
             <nav className="fixed w-full top-0 z-50 glass-panel border-b border-neon/20 shadow-lg" style={{zIndex: 50}}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3 cursor-pointer" onClick={() => setSection('home')}>
-                        <img src="http://googleusercontent.com/image_generation_content/3" alt="Logo" className="w-10 h-10 rounded-full border border-neon box-glow object-cover" />
+                        <img src="/assets/logo.png" alt="Logo" className="w-10 h-10 rounded-full border border-neon box-glow object-cover" />
                         <span className="text-xl font-bold text-white text-glow hidden sm:block">GAZA<span className="text-neon">IN</span></span>
                     </div>
 
@@ -410,9 +393,17 @@ const App = () => {
             {/* Main Content */}
             <main className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <AnimatePresence mode="wait">
-                    {section === 'home' && <Home key="home" t={t} setSection={setSection} />}
-                    {section === 'dao' && <Dao key="dao" t={t} wallet={wallet} gazaBalance={gazaBalance} />}
-                    {section === 'nft' && <Nft key="nft" t={t} isEligible={isEligible} mintNFT={mintNFT} />}
+                    <motion.div
+                        key={section}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -15 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {section === 'home' && <Home t={t} setSection={setSection} />}
+                        {section === 'dao' && <Dao t={t} wallet={wallet} gazaBalance={gazaBalance} />}
+                        {section === 'nft' && <Nft t={t} isEligible={isEligible} mintNFT={mintNFT} />}
+                    </motion.div>
                 </AnimatePresence>
             </main>
 
