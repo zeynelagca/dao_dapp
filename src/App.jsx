@@ -48,7 +48,8 @@ const TRANSLATIONS = {
         stat1: "Active Guardians",
         stat2: "Funds Raised",
         stat3: "Proposals Passed",
-        rights: "© 2026 Gaza Initiative. All rights reserved."
+        rights: "© 2026 Gaza Initiative. All rights reserved.",
+        heroDynamic: ["Hope", "Children", "Mothers", "Families", "Innocents"]
     },
     tr: {
         home: "Ana Sayfa", dao: "DAO", nft: "NFT Merkezi",
@@ -78,7 +79,8 @@ const TRANSLATIONS = {
         stat1: "Aktif Muhafızlar",
         stat2: "Toplanan Fon (USDC)",
         stat3: "Kabul Edilen Teklifler",
-        rights: "© 2026 Gaza Initiative. Tüm hakları saklıdır."
+        rights: "© 2026 Gaza Initiative. Tüm hakları saklıdır.",
+        heroDynamic: ["Umudun", "Çocukların", "Annelerin", "Ailelerin", "Masumların"]
     },
     ar: {
         home: "الرئيسية", dao: "المنظمة", nft: "مركز NFT",
@@ -108,11 +110,22 @@ const TRANSLATIONS = {
         stat1: "حراس نشطون",
         stat2: "الأموال المجمعة",
         stat3: "المقترحات المقبولة",
-        rights: "© 2026 مبادرة غزة. جميع الحقوق محفوظة."
+        rights: "© 2026 مبادرة غزة. جميع الحقوق محفوظة.",
+        heroDynamic: ["الأمل", "الأطفال", "الأمهات", "العائلات", "الأبرياء"]
     }
 };
 
-const Home = ({ t, setSection }) => (
+const Home = ({ t, setSection }) => {
+    const [wordIndex, setWordIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setWordIndex((prev) => (prev + 1) % t.heroDynamic.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [t.heroDynamic.length]);
+
+    return (
     <div className="space-y-32">
         {/* Hero Section */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-12 mt-10">
@@ -121,9 +134,29 @@ const Home = ({ t, setSection }) => (
                     <Zap size={14} />
                     <span>Polygon Network</span>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">{t.title.split(' ').slice(0, 2).join(' ')}</span><br />
-                    <span className="text-neon text-glow">{t.title.split(' ').slice(2).join(' ')}</span>
+                <h1 className="text-5xl md:text-7xl font-bold leading-tight flex flex-col items-start min-h-[160px]">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
+                        {t.title.split(' ').slice(0, 2).join(' ')}
+                    </span>
+                    <span className="text-neon text-glow mt-2 flex items-center relative h-[80px] w-full items-end overflow-hidden pb-1">
+                        <span className="opacity-0 pr-3">{t.title.split(' ').slice(2, 3).join(' ')}</span>
+                        <span className="absolute left-0 bottom-1 pr-3">{t.title.split(' ').slice(2, 3).join(' ')}</span>
+                        <div className="relative h-full flex items-end flex-1">
+                            <AnimatePresence mode="popLayout">
+                                <motion.span
+                                    key={wordIndex}
+                                    initial={{ y: 50, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: -50, opacity: 0 }}
+                                    transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
+                                    className="absolute bottom-1 text-white border-b-4 border-neon/50 pb-1"
+                                    style={{ lineHeight: '1' }}
+                                >
+                                    {t.heroDynamic[wordIndex]}
+                                </motion.span>
+                            </AnimatePresence>
+                        </div>
+                    </span>
                 </h1>
                 <p className="text-xl text-gray-400 max-w-lg leading-relaxed">
                     {t.subtitle}
@@ -190,7 +223,8 @@ const Home = ({ t, setSection }) => (
             </div>
         </div>
     </div>
-);
+    );
+};
 
 const Dao = ({ t, wallet, gazaBalance }) => (
     <div className="space-y-10">
@@ -521,7 +555,7 @@ const App = () => {
             <div className="fixed top-[20%] left-[-10%] w-[40%] h-[40%] bg-neon/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
             <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-neon/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
         </div>
-    )
+    );
 };
 
 export default App;
