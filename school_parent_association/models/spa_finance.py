@@ -24,24 +24,13 @@ class SpaDonation(models.Model):
     ], string='Bağış Türü', required=True, default='cash')
     amount = fields.Float(string='Tutar')
     description = fields.Text(string='Açıklama')
-    document_attachment_count = fields.Integer(compute='_compute_attachment_count', string='Ek Sayısı')
+    document_attachment_count = fields.Integer(related='message_attachment_count', string='Ek Sayısı', readonly=True)
     tefbis_ready = fields.Boolean(string='TEFBİS Hazır')
     state = fields.Selection([
         ('draft', 'Taslak'),
         ('confirmed', 'Onaylandı'),
         ('cancelled', 'İptal'),
     ], string='Durum', default='draft', tracking=True)
-
-    def _compute_attachment_count(self):
-        data = self.env['ir.attachment']._read_group(
-            [('res_model', '=', self._name), ('res_id', 'in', self.ids)],
-            ['res_id'],
-            ['__count'],
-        )
-        mapped = {res_id.id: count for res_id, count in data}
-        for rec in self:
-            rec.document_attachment_count = mapped.get(rec.id, 0)
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
