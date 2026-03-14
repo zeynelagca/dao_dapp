@@ -32,7 +32,6 @@ class SpaDonation(models.Model):
         ('cancelled', 'İptal'),
     ], string='Durum', default='draft', tracking=True)
 
-    @api.depends('message_main_attachment_id')
     def _compute_attachment_count(self):
         data = self.env['ir.attachment']._read_group(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)],
