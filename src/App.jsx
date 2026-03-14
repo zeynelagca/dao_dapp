@@ -351,8 +351,9 @@ const Dao = ({ t, wallet, gazaBalance }) => (
     </div>
 );
 
-const Nft = ({ t, isEligible, mintNFT }) => {
+const Nft = ({ t, isEligible, mintNFT, gazaBalance }) => {
     const [timeLeft, setTimeLeft] = useState(24 * 60 * 60);
+    const [activeCollection, setActiveCollection] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -368,21 +369,91 @@ const Nft = ({ t, isEligible, mintNFT }) => {
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    const nfts = [
-        { name: t.tier1, rarity: t.common, img: "/assets/tier1.png", color: "from-blue-500/20" },
-        { name: t.tier2, rarity: t.rare, img: "/assets/tier2.png", color: "from-purple-500/20" },
-        { name: t.tier3, rarity: t.legendary, img: "/assets/tier3.png", color: "from-amber-500/20" }
+    const balanceNum = parseFloat(gazaBalance || "0");
+
+    const collections = [
+        {
+            id: "hope",
+            name: "🌱 Seeds of Hope",
+            desc: "Entry-level collection. Plant the first seed of change.",
+            price: "0.02",
+            required: 10000,
+            supply: 5000,
+            minted: 1247,
+            img: "/assets/tier1.png",
+            gradient: "from-green-500/20",
+            border: "border-green-500/30",
+            rarity: "Common"
+        },
+        {
+            id: "children",
+            name: "👶 Children of Gaza",
+            desc: "Protect the future. Every child deserves safety and education.",
+            price: "0.04",
+            required: 25000,
+            supply: 2000,
+            minted: 834,
+            img: "/assets/children.png",
+            gradient: "from-cyan-500/20",
+            border: "border-cyan-500/30",
+            rarity: "Uncommon"
+        },
+        {
+            id: "mothers",
+            name: "👩 Mothers of Gaza",
+            desc: "Honor the strength. Mothers hold families together through everything.",
+            price: "0.06",
+            required: 50000,
+            supply: 1000,
+            minted: 412,
+            img: "/assets/tier2.png",
+            gradient: "from-purple-500/20",
+            border: "border-purple-500/30",
+            rarity: "Rare"
+        },
+        {
+            id: "families",
+            name: "👨‍👩‍👧 Families of Gaza",
+            desc: "Unity is power. Celebrate the bonds that no wall can break.",
+            price: "0.10",
+            required: 75000,
+            supply: 500,
+            minted: 189,
+            img: "/assets/tier3.png",
+            gradient: "from-amber-500/20",
+            border: "border-amber-500/30",
+            rarity: "Epic"
+        },
+        {
+            id: "innocents",
+            name: "🕊️ The Innocents",
+            desc: "Premium limited edition. The rarest and most powerful Guardian class.",
+            price: "0.20",
+            required: 100000,
+            supply: 100,
+            minted: 23,
+            img: "/assets/hero.png",
+            gradient: "from-yellow-500/20",
+            border: "border-yellow-400/30",
+            rarity: "Legendary"
+        }
     ];
 
+    const col = collections[activeCollection];
+    const meetsRequirement = balanceNum >= col.required;
+    const mintProgress = ((col.minted / col.supply) * 100).toFixed(0);
+
     return (
-        <div className="space-y-12">
+        <div className="space-y-10">
+            {/* Header */}
             <div className="text-center space-y-4">
                 <div className="inline-block px-6 py-2 glass-panel rounded-full border border-neon/30 text-neon box-glow">
                     <span className="uppercase tracking-widest text-sm font-bold">{t.nftMint}</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-                    1,948 Gaza Guardians
+                    Gaza Guardians Collection
                 </h2>
+                <p className="text-gray-400 max-w-2xl mx-auto">5 unique collections, each telling a story. Choose your Guardian and join the movement.</p>
 
                 <div className="flex justify-center mt-6">
                     <div className="glass-panel px-8 py-4 rounded-2xl border border-neon/50 font-mono shadow-[0_0_30px_rgba(34,197,94,0.1)]">
@@ -392,29 +463,138 @@ const Nft = ({ t, isEligible, mintNFT }) => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {nfts.map((nft, idx) => (
-                    <div key={idx} className={`glass-panel rounded-2xl overflow-hidden border border-white/10 hover:border-neon/50 transition-colors group relative bg-gradient-to-b ${nft.color} to-transparent`}>
-                        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10 z-10">
-                            {nft.rarity}
-                        </div>
-                        <div className="p-4">
-                            <div className="aspect-square rounded-xl overflow-hidden relative border border-white/5">
-                                <div className="absolute inset-0 bg-neon/20 opacity-0 group-hover:opacity-100 transition-opacity z-10 mix-blend-overlay"></div>
-                                <img src={nft.img} alt={nft.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+            {/* Revenue Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="glass-panel p-4 rounded-xl border border-white/10 text-center">
+                    <div className="text-2xl font-bold text-white">8,600</div>
+                    <div className="text-xs text-gray-400 uppercase">Total Supply</div>
+                </div>
+                <div className="glass-panel p-4 rounded-xl border border-white/10 text-center">
+                    <div className="text-2xl font-bold text-neon">2,705</div>
+                    <div className="text-xs text-gray-400 uppercase">Minted</div>
+                </div>
+                <div className="glass-panel p-4 rounded-xl border border-white/10 text-center">
+                    <div className="text-2xl font-bold text-white">5%</div>
+                    <div className="text-xs text-gray-400 uppercase">Royalty</div>
+                </div>
+                <div className="glass-panel p-4 rounded-xl border border-white/10 text-center">
+                    <div className="text-2xl font-bold text-amber-400">~142 ETH</div>
+                    <div className="text-xs text-gray-400 uppercase">Revenue</div>
+                </div>
+            </div>
+
+            {/* Collection Tabs */}
+            <div className="flex flex-wrap justify-center gap-2">
+                {collections.map((c, idx) => (
+                    <button
+                        key={c.id}
+                        onClick={() => setActiveCollection(idx)}
+                        className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCollection === idx
+                            ? 'bg-neon/20 text-neon border border-neon/50 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
+                            : 'glass-panel border border-white/10 text-gray-400 hover:text-white hover:border-white/30'
+                        }`}
+                    >
+                        {c.name.split(' ').slice(0, 2).join(' ')}
+                    </button>
+                ))}
+            </div>
+
+            {/* Active Collection Detail */}
+            <div className={`glass-panel rounded-3xl overflow-hidden border ${col.border} bg-gradient-to-br ${col.gradient} to-transparent`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                    {/* Image Side */}
+                    <div className="p-6 md:p-8">
+                        <div className="aspect-square rounded-2xl overflow-hidden border border-white/10 relative group">
+                            <div className="absolute inset-0 bg-neon/20 opacity-0 group-hover:opacity-100 transition-opacity z-10 mix-blend-overlay" />
+                            <img src={col.img} alt={col.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                            <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/20 z-20">
+                                {col.rarity}
                             </div>
-                            <h3 className="text-2xl font-bold mt-6 mb-2 text-white">{nft.name}</h3>
-                            <button
-                                onClick={() => mintNFT(idx)}
-                                disabled={!isEligible}
-                                className={`w-full mt-4 py-3 border rounded-lg font-bold transition-all shadow-lg ${isEligible ? 'bg-white/5 border-white/10 hover:bg-neon hover:text-black hover:border-neon hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]' : 'bg-white/5 border-white/10 text-gray-500 opacity-50 cursor-not-allowed'}`}>
-                                {isEligible ? t.mintBtn : "Not Eligible"}
-                            </button>
+                        </div>
+                    </div>
+
+                    {/* Info Side */}
+                    <div className="p-6 md:p-8 flex flex-col justify-center space-y-6">
+                        <div>
+                            <h3 className="text-3xl font-bold text-white mb-2">{col.name}</h3>
+                            <p className="text-gray-400">{col.desc}</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                                <span className="text-gray-400 text-sm">Mint Price</span>
+                                <span className="text-white font-bold text-lg">{col.price} ETH</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-gray-400 text-sm">Required $GAZAIN</span>
+                                <span className={`font-bold text-lg ${meetsRequirement ? 'text-neon' : 'text-red-400'}`}>
+                                    {col.required.toLocaleString()}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-gray-400 text-sm">Supply</span>
+                                <span className="text-white font-bold">{col.minted} / {col.supply}</span>
+                            </div>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div>
+                            <div className="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>Minted</span>
+                                <span>{mintProgress}%</span>
+                            </div>
+                            <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div className="h-full bg-neon progress-bar-glow rounded-full transition-all duration-500" style={{ width: `${mintProgress}%` }} />
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => mintNFT(activeCollection)}
+                            disabled={!meetsRequirement}
+                            className={`w-full py-4 rounded-xl font-bold text-lg transition-all shadow-lg ${meetsRequirement
+                                ? 'bg-neon/10 border border-neon/50 text-neon hover:bg-neon hover:text-black hover:shadow-[0_0_20px_rgba(34,197,94,0.5)]'
+                                : 'bg-white/5 border border-white/10 text-gray-500 cursor-not-allowed'
+                            }`}
+                        >
+                            {meetsRequirement ? `${t.mintBtn} — ${col.price} ETH` : `Need ${col.required.toLocaleString()} $GAZAIN`}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* All Collections Grid Preview */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                {collections.map((c, idx) => (
+                    <div
+                        key={c.id}
+                        onClick={() => setActiveCollection(idx)}
+                        className={`glass-panel rounded-xl overflow-hidden cursor-pointer transition-all border group ${
+                            activeCollection === idx ? 'border-neon/50 scale-105 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : 'border-white/10 hover:border-white/30'
+                        }`}
+                    >
+                        <div className="aspect-square overflow-hidden">
+                            <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        </div>
+                        <div className="p-3">
+                            <div className="text-sm font-bold text-white truncate">{c.name.split(' ').slice(1).join(' ')}</div>
+                            <div className="text-xs text-gray-400 mt-1">{c.price} ETH · {c.supply - c.minted} left</div>
                         </div>
                     </div>
                 ))}
             </div>
 
+            {/* Royalty Info */}
+            <div className="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 flex items-start gap-4">
+                <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/30 text-amber-400 shrink-0 mt-1">
+                    <Info size={20} />
+                </div>
+                <div>
+                    <h4 className="text-amber-200 font-bold mb-1">5% Secondary Market Royalty</h4>
+                    <p className="text-amber-200/70 text-sm">Every time a Guardian NFT is resold on OpenSea or any marketplace, 5% of the sale goes back to the Gaza Initiative treasury — ensuring continuous funding.</p>
+                </div>
+            </div>
+
+            {/* Evolution Engine */}
             <div className="glass-panel p-8 rounded-2xl flex flex-col md:flex-row items-center gap-8 border-l-4 border-l-neon shadow-[0_0_20px_rgba(34,197,94,0.05)]">
                 <div className="p-4 bg-neon/10 rounded-full border border-neon/30 box-glow shrink-0">
                     <Heart size={40} className="text-neon" />
@@ -424,8 +604,8 @@ const Nft = ({ t, isEligible, mintNFT }) => {
                     <p className="text-gray-400 max-w-lg">{t.evoText}</p>
                 </div>
                 <div className="md:ml-auto flex gap-3 shrink-0">
-                    {[1, 2, 3].map(level => (
-                        <div key={level} className={`w-3 h-12 rounded-full transition-all duration-500 ${level === 1 ? 'bg-neon box-glow scale-110' : 'bg-white/10'}`} />
+                    {[1, 2, 3, 4, 5].map(level => (
+                        <div key={level} className={`w-3 h-12 rounded-full transition-all duration-500 ${level <= 2 ? 'bg-neon box-glow scale-110' : 'bg-white/10'}`} />
                     ))}
                 </div>
             </div>
@@ -745,7 +925,7 @@ const App = () => {
                     >
                         {section === 'home' && <Home t={t} setSection={setSection} />}
                         {section === 'dao' && <Dao t={t} wallet={wallet} gazaBalance={gazaBalance} />}
-                        {section === 'nft' && <Nft t={t} isEligible={isEligible} mintNFT={mintNFT} />}
+                        {section === 'nft' && <Nft t={t} isEligible={isEligible} mintNFT={mintNFT} gazaBalance={gazaBalance} />}
                         {section === 'how' && <HowItWorks t={t} />}
                         {section === 'myWallet' && <MyWallet t={t} wallet={wallet} gazaBalance={gazaBalance} isEligible={isEligible} connectWallet={connectWallet} formatAddress={formatAddress} />}
                     </motion.div>
