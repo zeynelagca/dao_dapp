@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Wallet, Globe, Landmark, CheckCircle2,
-    ArrowRight, Activity, Shield, Zap, Heart
+    ArrowRight, Activity, Shield, Zap, Heart,
+    Lock, Users, TrendingUp, Github, Twitter
 } from 'lucide-react';
 import { ethers } from 'ethers';
 
@@ -35,7 +36,19 @@ const TRANSLATIONS = {
         mintBtn: "Mint Now",
         evolution: "Evolution Engine",
         evoText: "Hold and contribute to evolve your Guardian.",
-        common: "Common", rare: "Rare", legendary: "Legendary"
+        common: "Common", rare: "Rare", legendary: "Legendary",
+        featuresTitle: "Why Gaza Initiative?",
+        f1Title: "100% Transparent",
+        f1Desc: "Every transaction is recorded on the Polygon blockchain. Track exactly where your aid goes.",
+        f2Title: "Community Governed",
+        f2Desc: "Hold $GAZAIN to vote on how funds are distributed. Your voice shapes the impact.",
+        f3Title: "NFT Guardians",
+        f3Desc: "Mint exclusive NFTs to multiply your voting power and immortalize your support.",
+        statsTitle: "Global Impact",
+        stat1: "Active Guardians",
+        stat2: "Funds Raised",
+        stat3: "Proposals Passed",
+        rights: "© 2026 Gaza Initiative. All rights reserved."
     },
     tr: {
         home: "Ana Sayfa", dao: "DAO", nft: "NFT Merkezi",
@@ -53,7 +66,19 @@ const TRANSLATIONS = {
         mintBtn: "Şimdi Mint Et",
         evolution: "Evrim Motoru",
         evoText: "Muhafızınızı geliştirmek için tutun ve katkıda bulunun.",
-        common: "Yaygın", rare: "Nadir", legendary: "Efsanevi"
+        common: "Yaygın", rare: "Nadir", legendary: "Efsanevi",
+        featuresTitle: "Neden Gaza Initiative?",
+        f1Title: "%100 Şeffaf",
+        f1Desc: "Her işlem Polygon blokzincirinde kayıtlıdır. Yardımınızın tam olarak nereye gittiğini takip edin.",
+        f2Title: "Topluluk Yönetimi",
+        f2Desc: "Fonların nasıl dağıtılacağını oylamak için $GAZAIN tutun. Etkiyi siz şekillendirin.",
+        f3Title: "NFT Muhafızları",
+        f3Desc: "Oy gücünüzü katlamak ve desteğinizi ölümsüzleştirmek için özel NFT'ler mint edin.",
+        statsTitle: "Küresel Etki",
+        stat1: "Aktif Muhafızlar",
+        stat2: "Toplanan Fon (USDC)",
+        stat3: "Kabul Edilen Teklifler",
+        rights: "© 2026 Gaza Initiative. Tüm hakları saklıdır."
     },
     ar: {
         home: "الرئيسية", dao: "المنظمة", nft: "مركز NFT",
@@ -71,36 +96,98 @@ const TRANSLATIONS = {
         mintBtn: "سك الآن",
         evolution: "محرك التطور",
         evoText: "احتفظ وساهم لتطوير حارسك.",
-        common: "شائع", rare: "نادر", legendary: "أسطوري"
+        common: "شائع", rare: "نادر", legendary: "أسطوري",
+        featuresTitle: "لماذا مبادرة غزة؟",
+        f1Title: "شفافية 100%",
+        f1Desc: "يتم تسجيل كل معاملة على بلوكتشين بوليجون. تتبع بدقة أين تذهب مساعدتك.",
+        f2Title: "مجتمع يحكم نفسه",
+        f2Desc: "احتفظ بـ $GAZAIN للتصويت على كيفية توزيع الأموال. صوتك يشكل التأثير.",
+        f3Title: "حراس NFT",
+        f3Desc: "قم بسك رموز NFT حصرية لمضاعفة قوة تصويتك وتخليد دعمك.",
+        statsTitle: "تأثير عالمي",
+        stat1: "حراس نشطون",
+        stat2: "الأموال المجمعة",
+        stat3: "المقترحات المقبولة",
+        rights: "© 2026 مبادرة غزة. جميع الحقوق محفوظة."
     }
 };
 
 const Home = ({ t, setSection }) => (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-12 mt-10">
-        <div className="flex-1 space-y-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neon/30 bg-neon/5 text-neon text-sm font-medium">
-                <Zap size={14} />
-                <span>Polygon Network</span>
+    <div className="space-y-32">
+        {/* Hero Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-12 mt-10">
+            <div className="flex-1 space-y-8">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neon/30 bg-neon/5 text-neon text-sm font-medium">
+                    <Zap size={14} />
+                    <span>Polygon Network</span>
+                </div>
+                <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">{t.title.split(' ').slice(0, 2).join(' ')}</span><br />
+                    <span className="text-neon text-glow">{t.title.split(' ').slice(2).join(' ')}</span>
+                </h1>
+                <p className="text-xl text-gray-400 max-w-lg leading-relaxed">
+                    {t.subtitle}
+                </p>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <button onClick={() => setSection('dao')} className="w-full sm:w-auto flex justify-center items-center gap-2 bg-neon text-black px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+                        {t.dao} <ArrowRight size={20} />
+                    </button>
+                    <button onClick={() => setSection('nft')} className="w-full sm:w-auto flex justify-center items-center gap-2 glass-panel border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-colors duration-300">
+                        {t.nft}
+                    </button>
+                </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">{t.title.split(' ').slice(0, 2).join(' ')}</span><br />
-                <span className="text-neon text-glow">{t.title.split(' ').slice(2).join(' ')}</span>
-            </h1>
-            <p className="text-xl text-gray-400 max-w-lg leading-relaxed">
-                {t.subtitle}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-                <button onClick={() => setSection('dao')} className="w-full sm:w-auto flex justify-center items-center gap-2 bg-neon text-black px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-                    {t.dao} <ArrowRight size={20} />
-                </button>
-                <button onClick={() => setSection('nft')} className="w-full sm:w-auto flex justify-center items-center gap-2 glass-panel border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-colors duration-300">
-                    {t.nft}
-                </button>
+            <div className="flex-1 relative w-full max-w-md mx-auto md:max-w-full">
+                <div className="absolute inset-0 bg-neon/20 blur-[100px] rounded-full"></div>
+                <img src="/assets/hero.png" alt="Hero" className="relative z-10 w-full rounded-2xl border border-white/10 glass-panel transform hover:-translate-y-2 transition-transform duration-500" />
             </div>
         </div>
-        <div className="flex-1 relative w-full max-w-md mx-auto md:max-w-full">
-            <div className="absolute inset-0 bg-neon/20 blur-[100px] rounded-full"></div>
-            <img src="/assets/hero.png" alt="Hero" className="relative z-10 w-full rounded-2xl border border-white/10 glass-panel transform hover:-translate-y-2 transition-transform duration-500" />
+
+        {/* Global Impact Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center pt-10 border-t border-white/10 glass-panel rounded-3xl p-8 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+            <div>
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tighter">1,948</div>
+                <div className="text-neon text-sm uppercase tracking-wider font-semibold">{t.stat1}</div>
+            </div>
+            <div>
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tighter">$142.5K</div>
+                <div className="text-neon text-sm uppercase tracking-wider font-semibold">{t.stat2}</div>
+            </div>
+            <div>
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tighter">12</div>
+                <div className="text-neon text-sm uppercase tracking-wider font-semibold">{t.stat3}</div>
+            </div>
+        </div>
+
+        {/* Features Section */}
+        <div className="space-y-12 pb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 flex flex-col items-center">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">{t.featuresTitle}</span>
+                <span className="w-16 h-1 bg-neon mt-4 rounded-full box-glow"></span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="glass-panel p-8 rounded-2xl border border-white/10 hover:border-neon/30 transition-all hover:-translate-y-2 group shadow-xl">
+                    <div className="w-14 h-14 bg-neon/10 rounded-xl flex items-center justify-center border border-neon/30 mb-6 group-hover:bg-neon group-hover:text-black transition-colors text-neon">
+                        <Lock size={28} />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">{t.f1Title}</h3>
+                    <p className="text-gray-400 leading-relaxed">{t.f1Desc}</p>
+                </div>
+                <div className="glass-panel p-8 rounded-2xl border border-white/10 hover:border-neon/30 transition-all hover:-translate-y-2 group shadow-xl">
+                    <div className="w-14 h-14 bg-neon/10 rounded-xl flex items-center justify-center border border-neon/30 mb-6 group-hover:bg-neon group-hover:text-black transition-colors text-neon">
+                        <Users size={28} />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">{t.f2Title}</h3>
+                    <p className="text-gray-400 leading-relaxed">{t.f2Desc}</p>
+                </div>
+                <div className="glass-panel p-8 rounded-2xl border border-white/10 hover:border-neon/30 transition-all hover:-translate-y-2 group shadow-xl">
+                    <div className="w-14 h-14 bg-neon/10 rounded-xl flex items-center justify-center border border-neon/30 mb-6 group-hover:bg-neon group-hover:text-black transition-colors text-neon">
+                        <TrendingUp size={28} />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">{t.f3Title}</h3>
+                    <p className="text-gray-400 leading-relaxed">{t.f3Desc}</p>
+                </div>
+            </div>
         </div>
     </div>
 );
@@ -406,6 +493,29 @@ const App = () => {
                     </motion.div>
                 </AnimatePresence>
             </main>
+
+            {/* Footer */}
+            <footer className="border-t border-white/10 bg-black/40 pt-12 pb-8 mt-auto relative z-10 glass-panel">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="flex items-center gap-3">
+                            <img src="/assets/logo.png" alt="Logo" className="w-8 h-8 rounded-full border border-neon object-cover" />
+                            <span className="text-xl font-bold text-white tracking-widest text-glow">GAZA<span className="text-neon">IN</span></span>
+                        </div>
+                        <div className="flex gap-4">
+                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
+                                <Twitter size={18} />
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
+                                <Github size={18} />
+                            </a>
+                        </div>
+                    </div>
+                    <div className="text-center mt-8 text-sm text-gray-600">
+                        {t.rights}
+                    </div>
+                </div>
+            </footer>
 
             {/* Background decorations */}
             <div className="fixed top-[20%] left-[-10%] w-[40%] h-[40%] bg-neon/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
