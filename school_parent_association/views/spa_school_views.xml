@@ -4,13 +4,13 @@
         <field name="name">spa.school.tree</field>
         <field name="model">spa.school</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="school_type"/>
                 <field name="principal_id"/>
                 <field name="active"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="spa_school_view_form" model="ir.ui.view">
@@ -34,13 +34,13 @@
     <record id="spa_school_action" model="ir.actions.act_window">
         <field name="name">Okullar</field>
         <field name="res_model">spa.school</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="spa_academic_year_view_tree" model="ir.ui.view">
         <field name="name">spa.academic.year.tree</field>
         <field name="model">spa.academic.year</field>
-        <field name="arch" type="xml"><tree><field name="name"/><field name="date_start"/><field name="date_end"/><field name="active"/></tree></field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="date_start"/><field name="date_end"/><field name="active"/></list></field>
     </record>
     <record id="spa_academic_year_view_form" model="ir.ui.view">
         <field name="name">spa.academic.year.form</field>
@@ -52,21 +52,21 @@
     <record id="spa_academic_year_action" model="ir.actions.act_window">
         <field name="name">Akademik Yıllar</field>
         <field name="res_model">spa.academic.year</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="spa_union_term_view_tree" model="ir.ui.view">
         <field name="name">spa.union.term.tree</field>
         <field name="model">spa.union.term</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="school_id"/>
                 <field name="academic_year_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="state"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="spa_union_term_view_form" model="ir.ui.view">
@@ -111,6 +111,6 @@
     <record id="spa_union_term_action" model="ir.actions.act_window">
         <field name="name">Birlik Dönemleri</field>
         <field name="res_model">spa.union.term</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>
