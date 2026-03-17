@@ -4,7 +4,8 @@ import {
     Wallet, Globe, Landmark, CheckCircle2,
     ArrowRight, Activity, Shield, Zap, Heart,
     Lock, Users, TrendingUp, Github, Twitter,
-    ExternalLink, BookOpen, Coins, ArrowDownUp, Info, Copy, Check
+    ExternalLink, BookOpen, Coins, ArrowDownUp, Info, Copy, Check,
+    Youtube, Facebook, Linkedin
 } from 'lucide-react';
 import { ethers } from 'ethers';
 
@@ -1212,10 +1213,19 @@ const App = () => {
                         </div>
                         <div className="flex gap-4">
                             <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
-                                <Twitter size={18} />
+                                <Github size={18} />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
-                                <Github size={18} />
+                                <Coins size={18} />
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
+                                <Linkedin size={18} />
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
+                                <Facebook size={18} />
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-neon hover:bg-neon/10 transition-colors border border-white/10">
+                                <Youtube size={18} />
                             </a>
                         </div>
                     </div>
